@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+chdir(__DIR__ . '/..');
+
+$yearMonths = glob('20*');
+$yearMonth = end($yearMonths);
+[$day] = scandir($yearMonth, SCANDIR_SORT_DESCENDING);
+
+if (@$argv[1] === '-1') {
+    $yesterday = new DateTime("$yearMonth$day -1day");
+
+    $yearMonth = $yesterday->format('Ym');
+    $day = $yesterday->format('d');
+}
+
+[$build] = scandir($dir = "$yearMonth/$day", SCANDIR_SORT_DESCENDING);
+
+if (is_readable($file = "$dir/$build/steam.sqlite")) {
+    echo $file;
+
+    exit(0);
+}
+
+exit(1);
